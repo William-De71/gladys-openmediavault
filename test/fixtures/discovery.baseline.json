@@ -1,0 +1,555 @@
+{
+  "version": "0.1.0",
+  "devices": {
+    "nas": {
+      "external_id": "ext:test-integration:nas:main",
+      "should_poll": false,
+      "params": ["OMV_HOSTNAME", "OMV_VERSION"],
+      "features": [
+        {
+          "external_id": "ext:test-integration:nas:main:cpu",
+          "category": "level-sensor",
+          "type": "decimal",
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:nas:main:memory",
+          "category": "level-sensor",
+          "type": "decimal",
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:nas:main:uptime",
+          "category": "duration",
+          "type": "decimal",
+          "unit": "days",
+          "min": 0,
+          "max": 10000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:nas:main:updates",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 10000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:nas:main:version",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    },
+    "disk": {
+      "external_id": "ext:test-integration:disk:wd-wcc7k1abcdef",
+      "should_poll": false,
+      "params": ["OMV_DISK_SERIAL", "OMV_DISK_DEVICE"],
+      "features": [
+        {
+          "external_id": "ext:test-integration:disk:wd-wcc7k1abcdef:temperature",
+          "category": "device-temperature-sensor",
+          "type": "decimal",
+          "unit": "celsius",
+          "min": 0,
+          "max": 100,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:disk:wd-wcc7k1abcdef:power",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:disk:wd-wcc7k1abcdef:health",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    },
+    "filesystem": {
+      "external_id": "ext:test-integration:filesystem:956cfefe-1a91-4200-a1a4-c9324467bbe1",
+      "should_poll": false,
+      "params": ["OMV_FILESYSTEM_MOUNTPOINT", "OMV_FILESYSTEM_TYPE"],
+      "features": [
+        {
+          "external_id": "ext:test-integration:filesystem:956cfefe-1a91-4200-a1a4-c9324467bbe1:used",
+          "category": "level-sensor",
+          "type": "decimal",
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:test-integration:filesystem:956cfefe-1a91-4200-a1a4-c9324467bbe1:free",
+          "category": "data",
+          "type": "size",
+          "unit": "gigabyte",
+          "min": 0,
+          "max": 1000000000,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    },
+    "service": {
+      "external_id": "ext:test-integration:service:samba",
+      "should_poll": false,
+      "params": ["OMV_SERVICE"],
+      "features": [
+        {
+          "external_id": "ext:test-integration:service:samba:running",
+          "category": "switch",
+          "type": "binary",
+          "min": 0,
+          "max": 1,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    }
+  },
+  "manifest": {
+    "config_schema": [
+      {
+        "key": "intro",
+        "type": "section"
+      },
+      {
+        "key": "url",
+        "type": "string"
+      },
+      {
+        "key": "username",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "type": "secret"
+      },
+      {
+        "key": "verify_tls",
+        "type": "boolean"
+      },
+      {
+        "key": "options_intro",
+        "type": "section"
+      },
+      {
+        "key": "poll_interval",
+        "type": "number"
+      },
+      {
+        "key": "smart_health",
+        "type": "select"
+      },
+      {
+        "key": "language",
+        "type": "select"
+      }
+    ],
+    "actions": ["test_connection"],
+    "scene_triggers": [
+      {
+        "key": "connection_changed",
+        "fields": [
+          {
+            "key": "state",
+            "options": ["lost", "restored"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "state",
+            "type": "string"
+          },
+          {
+            "key": "hostname",
+            "type": "string"
+          },
+          {
+            "key": "down_minutes",
+            "type": "number"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "nas_rebooted",
+        "fields": [],
+        "variables": [
+          {
+            "key": "hostname",
+            "type": "string"
+          },
+          {
+            "key": "uptime_minutes",
+            "type": "number"
+          },
+          {
+            "key": "version",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "updates_available",
+        "fields": [],
+        "variables": [
+          {
+            "key": "updates",
+            "type": "number"
+          },
+          {
+            "key": "version",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "reboot_required",
+        "fields": [],
+        "variables": [
+          {
+            "key": "hostname",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "disk_health_changed",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          },
+          {
+            "key": "health",
+            "options": ["bad", "warning", "good"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "device",
+            "type": "string"
+          },
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "health",
+            "type": "string"
+          },
+          {
+            "key": "previous_health",
+            "type": "string"
+          },
+          {
+            "key": "status",
+            "type": "string"
+          },
+          {
+            "key": "disk",
+            "type": "string"
+          },
+          {
+            "key": "model",
+            "type": "string"
+          },
+          {
+            "key": "serial",
+            "type": "string"
+          },
+          {
+            "key": "temperature",
+            "type": "number"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "filesystem_usage",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          },
+          {
+            "key": "state",
+            "options": ["above", "below"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "device",
+            "type": "string"
+          },
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "state",
+            "type": "string"
+          },
+          {
+            "key": "used_percent",
+            "type": "number"
+          },
+          {
+            "key": "threshold",
+            "type": "number"
+          },
+          {
+            "key": "free_gb",
+            "type": "number"
+          },
+          {
+            "key": "mountpoint",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "filesystem_mount_changed",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          },
+          {
+            "key": "state",
+            "options": ["missing", "mounted"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "device",
+            "type": "string"
+          },
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "state",
+            "type": "string"
+          },
+          {
+            "key": "mountpoint",
+            "type": "string"
+          },
+          {
+            "key": "type",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "service_state_changed",
+        "fields": [
+          {
+            "key": "device",
+            "options": []
+          },
+          {
+            "key": "state",
+            "options": ["stopped", "started"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "device",
+            "type": "string"
+          },
+          {
+            "key": "device_name",
+            "type": "string"
+          },
+          {
+            "key": "service",
+            "type": "string"
+          },
+          {
+            "key": "title",
+            "type": "string"
+          },
+          {
+            "key": "state",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "scene_actions": [
+      {
+        "key": "get_status",
+        "fields": [],
+        "outputs": [
+          {
+            "key": "cpu",
+            "type": "number"
+          },
+          {
+            "key": "memory",
+            "type": "number"
+          },
+          {
+            "key": "uptime_days",
+            "type": "number"
+          },
+          {
+            "key": "updates",
+            "type": "number"
+          },
+          {
+            "key": "reboot_required",
+            "type": "number"
+          },
+          {
+            "key": "storage_used_max",
+            "type": "number"
+          },
+          {
+            "key": "disk_temperature_max",
+            "type": "number"
+          },
+          {
+            "key": "disks_failing",
+            "type": "number"
+          },
+          {
+            "key": "services_stopped",
+            "type": "number"
+          },
+          {
+            "key": "version",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "run_rsync_job",
+        "fields": ["job", "wait"],
+        "outputs": [
+          {
+            "key": "job",
+            "type": "string"
+          },
+          {
+            "key": "status",
+            "type": "string"
+          },
+          {
+            "key": "message",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "check_updates",
+        "fields": [],
+        "outputs": [
+          {
+            "key": "updates",
+            "type": "number"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "reboot",
+        "fields": ["delay"],
+        "outputs": []
+      },
+      {
+        "key": "shutdown",
+        "fields": ["delay"],
+        "outputs": []
+      }
+    ],
+    "widgets": [
+      {
+        "key": "overview",
+        "settings": [],
+        "options": {}
+      },
+      {
+        "key": "storage",
+        "settings": ["filesystem", "interval"],
+        "options": {
+          "interval": ["last-day", "last-three-days", "last-week", "last-month"]
+        }
+      },
+      {
+        "key": "disks",
+        "settings": [],
+        "options": {}
+      }
+    ]
+  }
+}

@@ -1,0 +1,1571 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "OpenMediaVault",
+  "description": {
+    "en": "OpenMediaVault NAS: system, disks and S.M.A.R.T., file systems, services, rsync, scenes.",
+    "fr": "NAS OpenMediaVault : système, disques et S.M.A.R.T., stockage, services, rsync, scènes.",
+    "de": "OpenMediaVault-NAS: System, Laufwerke, S.M.A.R.T., Dateisysteme, Dienste, rsync, Szenen.",
+    "es": "NAS OpenMediaVault: sistema, discos y S.M.A.R.T., almacenamiento, servicios, rsync, escenas."
+  },
+  "version": "0.1.0",
+  "docker_image": "ghcr.io/william-de71/gladys-openmediavault:0.1.0",
+  "gladys_version": ">=5.1.0",
+  "categories": ["network", "services"],
+  "cover_image": "https://raw.githubusercontent.com/William-De71/gladys-openmediavault/main/cover.jpg",
+  "transports": ["local"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "OpenMediaVault account",
+        "fr": "Compte OpenMediaVault",
+        "de": "OpenMediaVault-Konto",
+        "es": "Cuenta de OpenMediaVault"
+      },
+      "description": {
+        "en": "The integration logs in to the web interface of OpenMediaVault, like your browser, and reads it every minute. It needs an administrator: admin, or a user of the openmediavault-admin group, without two-factor authentication. Everything stays on your network.",
+        "fr": "L’intégration se connecte à l’interface web d’OpenMediaVault, comme votre navigateur, et la lit chaque minute. Il lui faut un administrateur : admin, ou un utilisateur du groupe openmediavault-admin, sans double authentification. Tout reste sur votre réseau.",
+        "de": "Die Integration meldet sich wie Ihr Browser an der Weboberfläche von OpenMediaVault an und liest sie jede Minute. Sie braucht einen Administrator: admin oder einen Benutzer der Gruppe openmediavault-admin, ohne Zwei-Faktor-Anmeldung. Alles bleibt in Ihrem Netzwerk.",
+        "es": "La integración inicia sesión en la interfaz web de OpenMediaVault, como su navegador, y la lee cada minuto. Necesita un administrador: admin, o un usuario del grupo openmediavault-admin, sin doble autenticación. Todo se queda en su red."
+      },
+      "links": [
+        {
+          "label": {
+            "en": "Documentation",
+            "fr": "Documentation",
+            "de": "Dokumentation",
+            "es": "Documentación"
+          },
+          "url": "https://github.com/William-De71/gladys-openmediavault#configuration"
+        }
+      ]
+    },
+    {
+      "key": "url",
+      "type": "string",
+      "label": {
+        "en": "Address of OpenMediaVault",
+        "fr": "Adresse d’OpenMediaVault",
+        "de": "Adresse von OpenMediaVault",
+        "es": "Dirección de OpenMediaVault"
+      },
+      "description": {
+        "en": "The address you type in your browser to open OpenMediaVault, with its port if it is not 80 or 443.",
+        "fr": "L’adresse que vous tapez dans votre navigateur pour ouvrir OpenMediaVault, avec son port s’il n’est pas 80 ou 443.",
+        "de": "Die Adresse, die Sie im Browser eingeben, um OpenMediaVault zu öffnen, mit Port, wenn er nicht 80 oder 443 ist.",
+        "es": "La dirección que escribe en su navegador para abrir OpenMediaVault, con su puerto si no es 80 ni 443."
+      },
+      "placeholder": {
+        "en": "http://192.168.1.10",
+        "fr": "http://192.168.1.10",
+        "de": "http://192.168.1.10",
+        "es": "http://192.168.1.10"
+      },
+      "required": true
+    },
+    {
+      "key": "username",
+      "type": "string",
+      "label": {
+        "en": "User",
+        "fr": "Utilisateur",
+        "de": "Benutzer",
+        "es": "Usuario"
+      },
+      "description": {
+        "en": "An administrator of OpenMediaVault.",
+        "fr": "Un administrateur d’OpenMediaVault.",
+        "de": "Ein Administrator von OpenMediaVault.",
+        "es": "Un administrador de OpenMediaVault."
+      },
+      "placeholder": {
+        "en": "admin",
+        "fr": "admin",
+        "de": "admin",
+        "es": "admin"
+      },
+      "default": "admin",
+      "required": true
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": {
+        "en": "Password",
+        "fr": "Mot de passe",
+        "de": "Passwort",
+        "es": "Contraseña"
+      },
+      "required": true
+    },
+    {
+      "key": "verify_tls",
+      "type": "boolean",
+      "label": {
+        "en": "Check the HTTPS certificate",
+        "fr": "Vérifier le certificat HTTPS",
+        "de": "HTTPS-Zertifikat prüfen",
+        "es": "Verificar el certificado HTTPS"
+      },
+      "description": {
+        "en": "Only for an https:// address. Leave it off with the self-signed certificate of OpenMediaVault.",
+        "fr": "Seulement pour une adresse https://. Laissez désactivé avec le certificat auto-signé d’OpenMediaVault.",
+        "de": "Nur für eine https://-Adresse. Bei einem selbstsignierten Zertifikat von OpenMediaVault ausgeschaltet lassen.",
+        "es": "Solo para una dirección https://. Déjelo desactivado con el certificado autofirmado de OpenMediaVault."
+      },
+      "default": false
+    },
+    {
+      "key": "options_intro",
+      "type": "section",
+      "label": {
+        "en": "Options",
+        "fr": "Options",
+        "de": "Optionen",
+        "es": "Opciones"
+      },
+      "description": {
+        "en": "OpenMediaVault e-mails its administrator at the first login from a new browser: you will get one such e-mail when the integration starts.",
+        "fr": "OpenMediaVault écrit à son administrateur à la première connexion d’un nouveau navigateur : vous recevrez un tel e-mail au démarrage de l’intégration.",
+        "de": "OpenMediaVault schreibt seinem Administrator bei der ersten Anmeldung eines neuen Browsers: Beim Start der Integration erhalten Sie eine solche E-Mail.",
+        "es": "OpenMediaVault escribe a su administrador en el primer inicio de sesión desde un navegador nuevo: recibirá un correo así al iniciar la integración."
+      }
+    },
+    {
+      "key": "poll_interval",
+      "type": "number",
+      "label": {
+        "en": "Reading interval (seconds)",
+        "fr": "Intervalle de lecture (secondes)",
+        "de": "Leseintervall (Sekunden)",
+        "es": "Intervalo de lectura (segundos)"
+      },
+      "description": {
+        "en": "CPU, memory, file systems and services. The disks are read every 5 minutes.",
+        "fr": "CPU, mémoire, systèmes de fichiers et services. Les disques sont lus toutes les 5 minutes.",
+        "de": "CPU, Speicher, Dateisysteme und Dienste. Die Laufwerke werden alle 5 Minuten gelesen.",
+        "es": "CPU, memoria, sistemas de archivos y servicios. Los discos se leen cada 5 minutos."
+      },
+      "default": 60,
+      "min": 15,
+      "max": 240
+    },
+    {
+      "key": "smart_health",
+      "type": "select",
+      "label": {
+        "en": "S.M.A.R.T. health of the disks",
+        "fr": "Santé S.M.A.R.T. des disques",
+        "de": "S.M.A.R.T.-Zustand der Laufwerke",
+        "es": "Salud S.M.A.R.T. de los discos"
+      },
+      "description": {
+        "en": "Read every hour. Reading it spins up a disk in standby: by default it waits until no disk sleeps.",
+        "fr": "Lue chaque heure. La lire réveille un disque en veille : par défaut, elle attend qu’aucun disque ne dorme.",
+        "de": "Stündlich gelesen. Das Lesen weckt ein Laufwerk im Standby: Standardmäßig wird gewartet, bis keines schläft.",
+        "es": "Se lee cada hora. Leerla despierta un disco en reposo: por defecto espera a que ningún disco duerma."
+      },
+      "default": "awake",
+      "options": [
+        {
+          "value": "awake",
+          "label": {
+            "en": "When no disk is in standby",
+            "fr": "Quand aucun disque n’est en veille",
+            "de": "Wenn kein Laufwerk im Standby ist",
+            "es": "Cuando ningún disco está en reposo"
+          }
+        },
+        {
+          "value": "always",
+          "label": {
+            "en": "Every hour, even if it wakes a disk",
+            "fr": "Chaque heure, même si un disque se réveille",
+            "de": "Stündlich, auch wenn ein Laufwerk aufwacht",
+            "es": "Cada hora, aunque despierte un disco"
+          }
+        },
+        {
+          "value": "off",
+          "label": {
+            "en": "Never",
+            "fr": "Jamais",
+            "de": "Nie",
+            "es": "Nunca"
+          }
+        }
+      ]
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the texts",
+        "fr": "Langue des textes",
+        "de": "Sprache der Texte",
+        "es": "Idioma de los textos"
+      },
+      "description": {
+        "en": "Names of the features and summaries of the scenes. Automatic: the language of your dashboard.",
+        "fr": "Noms des fonctionnalités et résumés des scènes. Automatique : la langue de votre tableau de bord.",
+        "de": "Namen der Funktionen und Zusammenfassungen der Szenen. Automatisch: die Sprache Ihres Dashboards.",
+        "es": "Nombres de las funciones y resúmenes de las escenas. Automático: el idioma de su panel."
+      },
+      "default": "auto",
+      "options": [
+        {
+          "value": "auto",
+          "label": {
+            "en": "Automatic",
+            "fr": "Automatique",
+            "de": "Automatisch",
+            "es": "Automático"
+          }
+        },
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Logs in to OpenMediaVault and shows its version.",
+        "fr": "Se connecte à OpenMediaVault et affiche sa version.",
+        "de": "Meldet sich bei OpenMediaVault an und zeigt die Version.",
+        "es": "Inicia sesión en OpenMediaVault y muestra su versión."
+      },
+      "timeout_seconds": 30
+    }
+  ],
+  "widgets": [
+    {
+      "key": "overview",
+      "label": {
+        "en": "OpenMediaVault",
+        "fr": "OpenMediaVault",
+        "de": "OpenMediaVault",
+        "es": "OpenMediaVault"
+      },
+      "description": {
+        "en": "CPU, memory, uptime, updates, disks and services; update, reboot and shutdown buttons.",
+        "fr": "CPU, mémoire, mises à jour, disques et services ; boutons mise à jour, redémarrage, arrêt.",
+        "de": "CPU, Speicher, Updates, Laufwerke und Dienste; Tasten für Updates, Neustart, Ausschalten.",
+        "es": "CPU, memoria, actualizaciones, discos y servicios; botones actualizar, reiniciar, apagar."
+      },
+      "icon": "server"
+    },
+    {
+      "key": "storage",
+      "label": {
+        "en": "NAS storage",
+        "fr": "Stockage du NAS",
+        "de": "NAS-Speicher",
+        "es": "Almacenamiento del NAS"
+      },
+      "description": {
+        "en": "How full the file systems are, or one of them with the history of its usage.",
+        "fr": "Remplissage des systèmes de fichiers, ou de l’un d’eux avec l’historique de son occupation.",
+        "de": "Belegung der Dateisysteme, oder eines davon mit dem Verlauf seiner Belegung.",
+        "es": "Ocupación de los sistemas de archivos, o de uno de ellos con su historial."
+      },
+      "icon": "hard-drive",
+      "settings": [
+        {
+          "key": "filesystem",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "File system",
+            "fr": "Système de fichiers",
+            "de": "Dateisystem",
+            "es": "Sistema de archivos"
+          },
+          "description": {
+            "en": "A file system device. Empty: all of them. The chart needs the device created.",
+            "fr": "Un appareil système de fichiers. Vide : tous. Le graphique demande l’appareil créé.",
+            "de": "Ein Dateisystem-Gerät. Leer: alle. Das Diagramm braucht das angelegte Gerät.",
+            "es": "Un dispositivo sistema de archivos. Vacío: todos. El gráfico necesita el dispositivo creado."
+          },
+          "required": false
+        },
+        {
+          "key": "interval",
+          "type": "select",
+          "label": {
+            "en": "Chart period",
+            "fr": "Période du graphique",
+            "de": "Zeitraum des Diagramms",
+            "es": "Periodo del gráfico"
+          },
+          "options": [
+            {
+              "value": "last-day",
+              "label": {
+                "en": "Last 24 hours",
+                "fr": "Dernières 24 heures",
+                "de": "Letzte 24 Stunden",
+                "es": "Últimas 24 horas"
+              }
+            },
+            {
+              "value": "last-three-days",
+              "label": {
+                "en": "Last 3 days",
+                "fr": "3 derniers jours",
+                "de": "Letzte 3 Tage",
+                "es": "Últimos 3 días"
+              }
+            },
+            {
+              "value": "last-week",
+              "label": {
+                "en": "Last week",
+                "fr": "Dernière semaine",
+                "de": "Letzte Woche",
+                "es": "Última semana"
+              }
+            },
+            {
+              "value": "last-month",
+              "label": {
+                "en": "Last month",
+                "fr": "Dernier mois",
+                "de": "Letzter Monat",
+                "es": "Último mes"
+              }
+            }
+          ],
+          "default": "last-week",
+          "required": false
+        }
+      ]
+    },
+    {
+      "key": "disks",
+      "label": {
+        "en": "NAS disks",
+        "fr": "Disques du NAS",
+        "de": "NAS-Laufwerke",
+        "es": "Discos del NAS"
+      },
+      "description": {
+        "en": "Temperature, standby and S.M.A.R.T. health of each disk.",
+        "fr": "Température, veille et santé S.M.A.R.T. de chaque disque.",
+        "de": "Temperatur, Standby und S.M.A.R.T.-Zustand jedes Laufwerks.",
+        "es": "Temperatura, reposo y salud S.M.A.R.T. de cada disco."
+      },
+      "icon": "database"
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "connection_changed",
+      "label": {
+        "en": "OpenMediaVault: NAS unreachable or back",
+        "fr": "OpenMediaVault : NAS injoignable ou de retour",
+        "de": "OpenMediaVault: NAS nicht erreichbar oder zurück",
+        "es": "OpenMediaVault: NAS inaccesible o de vuelta"
+      },
+      "description": {
+        "en": "The NAS stopped answering (two readings in a row) or answers again. Not after a reboot or a shutdown asked from Gladys.",
+        "fr": "Le NAS ne répond plus (deux lectures de suite) ou répond de nouveau. Pas après un redémarrage ou un arrêt demandé par Gladys.",
+        "de": "Das NAS antwortet nicht mehr (zwei Lesungen hintereinander) oder wieder. Nicht nach einem von Gladys verlangten Neustart oder Herunterfahren.",
+        "es": "El NAS dejó de responder (dos lecturas seguidas) o vuelve a responder. No tras un reinicio o apagado pedido desde Gladys."
+      },
+      "fields": [
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Event",
+            "fr": "Événement",
+            "de": "Ereignis",
+            "es": "Evento"
+          },
+          "description": {
+            "en": "Leave empty for both.",
+            "fr": "Laissez vide pour les deux.",
+            "de": "Leer lassen für beide.",
+            "es": "Déjelo vacío para ambos."
+          },
+          "options": [
+            {
+              "value": "lost",
+              "label": {
+                "en": "No longer answers",
+                "fr": "Ne répond plus",
+                "de": "Antwortet nicht mehr",
+                "es": "Ya no responde"
+              }
+            },
+            {
+              "value": "restored",
+              "label": {
+                "en": "Answers again",
+                "fr": "Répond de nouveau",
+                "de": "Antwortet wieder",
+                "es": "Vuelve a responder"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Event (lost, restored)",
+            "fr": "Événement (lost, restored)",
+            "de": "Ereignis (lost, restored)",
+            "es": "Evento (lost, restored)"
+          }
+        },
+        {
+          "key": "hostname",
+          "type": "string",
+          "label": {
+            "en": "Host name",
+            "fr": "Nom d’hôte",
+            "de": "Hostname",
+            "es": "Nombre de host"
+          }
+        },
+        {
+          "key": "down_minutes",
+          "type": "number",
+          "label": {
+            "en": "Minutes without answer",
+            "fr": "Minutes sans réponse",
+            "de": "Minuten ohne Antwort",
+            "es": "Minutos sin respuesta"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "nas_rebooted",
+      "label": {
+        "en": "OpenMediaVault: NAS restarted",
+        "fr": "OpenMediaVault : NAS redémarré",
+        "de": "OpenMediaVault: NAS neu gestartet",
+        "es": "OpenMediaVault: NAS reiniciado"
+      },
+      "description": {
+        "en": "Its uptime went back to zero: a reboot, a power cut. Not after a reboot asked from Gladys.",
+        "fr": "Sa durée de marche est revenue à zéro : redémarrage, coupure de courant. Pas après un redémarrage demandé par Gladys.",
+        "de": "Seine Betriebszeit fiel auf null: Neustart, Stromausfall. Nicht nach einem von Gladys verlangten Neustart.",
+        "es": "Su tiempo activo volvió a cero: reinicio, corte de luz. No tras un reinicio pedido desde Gladys."
+      },
+      "variables": [
+        {
+          "key": "hostname",
+          "type": "string",
+          "label": {
+            "en": "Host name",
+            "fr": "Nom d’hôte",
+            "de": "Hostname",
+            "es": "Nombre de host"
+          }
+        },
+        {
+          "key": "uptime_minutes",
+          "type": "number",
+          "label": {
+            "en": "Uptime (minutes)",
+            "fr": "Durée de marche (minutes)",
+            "de": "Betriebszeit (Minuten)",
+            "es": "Tiempo activo (minutos)"
+          }
+        },
+        {
+          "key": "version",
+          "type": "string",
+          "label": {
+            "en": "Version",
+            "fr": "Version",
+            "de": "Version",
+            "es": "Versión"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "updates_available",
+      "label": {
+        "en": "OpenMediaVault: updates available",
+        "fr": "OpenMediaVault : mises à jour disponibles",
+        "de": "OpenMediaVault: Updates verfügbar",
+        "es": "OpenMediaVault: actualizaciones disponibles"
+      },
+      "description": {
+        "en": "Packages to upgrade appeared, or their number grew, after the daily check of OpenMediaVault.",
+        "fr": "Des paquets à mettre à jour sont apparus, ou leur nombre a augmenté, après la vérification quotidienne d’OpenMediaVault.",
+        "de": "Pakete zum Aktualisieren sind erschienen oder mehr geworden, nach der täglichen Prüfung von OpenMediaVault.",
+        "es": "Aparecieron paquetes por actualizar, o aumentó su número, tras la comprobación diaria de OpenMediaVault."
+      },
+      "variables": [
+        {
+          "key": "updates",
+          "type": "number",
+          "label": {
+            "en": "Packages to upgrade",
+            "fr": "Paquets à mettre à jour",
+            "de": "Zu aktualisierende Pakete",
+            "es": "Paquetes por actualizar"
+          }
+        },
+        {
+          "key": "version",
+          "type": "string",
+          "label": {
+            "en": "Version",
+            "fr": "Version",
+            "de": "Version",
+            "es": "Versión"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "reboot_required",
+      "label": {
+        "en": "OpenMediaVault: reboot required",
+        "fr": "OpenMediaVault : redémarrage nécessaire",
+        "de": "OpenMediaVault: Neustart erforderlich",
+        "es": "OpenMediaVault: reinicio necesario"
+      },
+      "description": {
+        "en": "An update (a new kernel, for instance) needs a reboot of the NAS.",
+        "fr": "Une mise à jour (un nouveau noyau, par exemple) demande un redémarrage du NAS.",
+        "de": "Ein Update (zum Beispiel ein neuer Kernel) verlangt einen Neustart des NAS.",
+        "es": "Una actualización (un kernel nuevo, por ejemplo) necesita un reinicio del NAS."
+      },
+      "variables": [
+        {
+          "key": "hostname",
+          "type": "string",
+          "label": {
+            "en": "Host name",
+            "fr": "Nom d’hôte",
+            "de": "Hostname",
+            "es": "Nombre de host"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "disk_health_changed",
+      "label": {
+        "en": "OpenMediaVault: disk health changed",
+        "fr": "OpenMediaVault : santé d’un disque changée",
+        "de": "OpenMediaVault: Laufwerkszustand geändert",
+        "es": "OpenMediaVault: salud de un disco cambiada"
+      },
+      "description": {
+        "en": "The S.M.A.R.T. health of a disk became bad, reports a past problem, or is good again.",
+        "fr": "La santé S.M.A.R.T. d’un disque devient mauvaise, signale un problème passé, ou redevient bonne.",
+        "de": "Der S.M.A.R.T.-Zustand eines Laufwerks wird schlecht, meldet ein früheres Problem oder ist wieder gut.",
+        "es": "La salud S.M.A.R.T. de un disco empeora, indica un problema pasado o vuelve a ser buena."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "A disk device. Leave empty for any disk.",
+            "fr": "Un appareil disque. Laissez vide pour tous.",
+            "de": "Ein Laufwerk-Gerät. Leer lassen für jedes Laufwerk.",
+            "es": "Un dispositivo disco. Vacío para cualquier disco."
+          },
+          "required": false
+        },
+        {
+          "key": "health",
+          "type": "multi_select",
+          "label": {
+            "en": "New health",
+            "fr": "Nouvelle santé",
+            "de": "Neuer Zustand",
+            "es": "Nueva salud"
+          },
+          "description": {
+            "en": "Leave empty for any.",
+            "fr": "Laissez vide pour toutes.",
+            "de": "Leer lassen für jeden.",
+            "es": "Déjelo vacío para cualquiera."
+          },
+          "options": [
+            {
+              "value": "bad",
+              "label": {
+                "en": "Failing",
+                "fr": "Défaillant",
+                "de": "Fehlerhaft",
+                "es": "Con fallos"
+              }
+            },
+            {
+              "value": "warning",
+              "label": {
+                "en": "Past problem",
+                "fr": "Problème passé",
+                "de": "Früheres Problem",
+                "es": "Problema pasado"
+              }
+            },
+            {
+              "value": "good",
+              "label": {
+                "en": "Good",
+                "fr": "Bon",
+                "de": "Gut",
+                "es": "Bueno"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          }
+        },
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "health",
+          "type": "string",
+          "label": {
+            "en": "Health (good, warning, bad)",
+            "fr": "Santé (good, warning, bad)",
+            "de": "Zustand (good, warning, bad)",
+            "es": "Salud (good, warning, bad)"
+          }
+        },
+        {
+          "key": "previous_health",
+          "type": "string",
+          "label": {
+            "en": "Previous health",
+            "fr": "Santé précédente",
+            "de": "Vorheriger Zustand",
+            "es": "Salud anterior"
+          }
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "S.M.A.R.T. status",
+            "fr": "État S.M.A.R.T.",
+            "de": "S.M.A.R.T.-Status",
+            "es": "Estado S.M.A.R.T."
+          }
+        },
+        {
+          "key": "disk",
+          "type": "string",
+          "label": {
+            "en": "Device file",
+            "fr": "Fichier de périphérique",
+            "de": "Gerätedatei",
+            "es": "Archivo de dispositivo"
+          }
+        },
+        {
+          "key": "model",
+          "type": "string",
+          "label": {
+            "en": "Model",
+            "fr": "Modèle",
+            "de": "Modell",
+            "es": "Modelo"
+          }
+        },
+        {
+          "key": "serial",
+          "type": "string",
+          "label": {
+            "en": "Serial number",
+            "fr": "Numéro de série",
+            "de": "Seriennummer",
+            "es": "Número de serie"
+          }
+        },
+        {
+          "key": "temperature",
+          "type": "number",
+          "label": {
+            "en": "Temperature (°C)",
+            "fr": "Température (°C)",
+            "de": "Temperatur (°C)",
+            "es": "Temperatura (°C)"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "filesystem_usage",
+      "label": {
+        "en": "OpenMediaVault: file system almost full",
+        "fr": "OpenMediaVault : système de fichiers presque plein",
+        "de": "OpenMediaVault: Dateisystem fast voll",
+        "es": "OpenMediaVault: sistema de archivos casi lleno"
+      },
+      "description": {
+        "en": "A file system goes above, or back below, the usage warning threshold set for it in OpenMediaVault (85 % by default).",
+        "fr": "Un système de fichiers dépasse, ou repasse sous, le seuil d’alerte d’occupation réglé dans OpenMediaVault (85 % par défaut).",
+        "de": "Ein Dateisystem überschreitet die in OpenMediaVault eingestellte Warnschwelle (standardmäßig 85 %) oder fällt wieder darunter.",
+        "es": "Un sistema de archivos supera, o vuelve a bajar de, el umbral de aviso fijado en OpenMediaVault (85 % por defecto)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "A file system device. Leave empty for any.",
+            "fr": "Un appareil système de fichiers. Laissez vide pour tous.",
+            "de": "Ein Dateisystem-Gerät. Leer lassen für jedes.",
+            "es": "Un dispositivo sistema de archivos. Vacío para cualquiera."
+          },
+          "required": false
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Direction",
+            "fr": "Sens",
+            "de": "Richtung",
+            "es": "Sentido"
+          },
+          "description": {
+            "en": "Leave empty for both.",
+            "fr": "Laissez vide pour les deux.",
+            "de": "Leer lassen für beide.",
+            "es": "Déjelo vacío para ambos."
+          },
+          "options": [
+            {
+              "value": "above",
+              "label": {
+                "en": "Above the threshold",
+                "fr": "Au-dessus du seuil",
+                "de": "Über der Schwelle",
+                "es": "Por encima del umbral"
+              }
+            },
+            {
+              "value": "below",
+              "label": {
+                "en": "Back below",
+                "fr": "Repassé en dessous",
+                "de": "Wieder darunter",
+                "es": "De nuevo por debajo"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          }
+        },
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Direction (above, below)",
+            "fr": "Sens (above, below)",
+            "de": "Richtung (above, below)",
+            "es": "Sentido (above, below)"
+          }
+        },
+        {
+          "key": "used_percent",
+          "type": "number",
+          "label": {
+            "en": "Space used (%)",
+            "fr": "Espace utilisé (%)",
+            "de": "Belegt (%)",
+            "es": "Espacio usado (%)"
+          }
+        },
+        {
+          "key": "threshold",
+          "type": "number",
+          "label": {
+            "en": "Threshold (%)",
+            "fr": "Seuil (%)",
+            "de": "Schwelle (%)",
+            "es": "Umbral (%)"
+          }
+        },
+        {
+          "key": "free_gb",
+          "type": "number",
+          "label": {
+            "en": "Free space (GB)",
+            "fr": "Espace libre (Go)",
+            "de": "Frei (GB)",
+            "es": "Espacio libre (GB)"
+          }
+        },
+        {
+          "key": "mountpoint",
+          "type": "string",
+          "label": {
+            "en": "Mount point",
+            "fr": "Point de montage",
+            "de": "Einhängepunkt",
+            "es": "Punto de montaje"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "filesystem_mount_changed",
+      "label": {
+        "en": "OpenMediaVault: file system missing or back",
+        "fr": "OpenMediaVault : système de fichiers absent ou revenu",
+        "de": "OpenMediaVault: Dateisystem fehlt oder zurück",
+        "es": "OpenMediaVault: sistema de archivos ausente o de vuelta"
+      },
+      "description": {
+        "en": "A file system is no longer mounted (USB disk unplugged, failed mount), or is mounted again.",
+        "fr": "Un système de fichiers n’est plus monté (disque USB débranché, montage en échec), ou l’est de nouveau.",
+        "de": "Ein Dateisystem ist nicht mehr eingehängt (USB-Laufwerk getrennt, Einhängen fehlgeschlagen) oder wieder eingehängt.",
+        "es": "Un sistema de archivos ya no está montado (disco USB desconectado, montaje fallido), o vuelve a estarlo."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "A file system device. Leave empty for any.",
+            "fr": "Un appareil système de fichiers. Laissez vide pour tous.",
+            "de": "Ein Dateisystem-Gerät. Leer lassen für jedes.",
+            "es": "Un dispositivo sistema de archivos. Vacío para cualquiera."
+          },
+          "required": false
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Event",
+            "fr": "Événement",
+            "de": "Ereignis",
+            "es": "Evento"
+          },
+          "description": {
+            "en": "Leave empty for both.",
+            "fr": "Laissez vide pour les deux.",
+            "de": "Leer lassen für beide.",
+            "es": "Déjelo vacío para ambos."
+          },
+          "options": [
+            {
+              "value": "missing",
+              "label": {
+                "en": "No longer mounted",
+                "fr": "N’est plus monté",
+                "de": "Nicht mehr eingehängt",
+                "es": "Ya no está montado"
+              }
+            },
+            {
+              "value": "mounted",
+              "label": {
+                "en": "Mounted",
+                "fr": "Monté",
+                "de": "Eingehängt",
+                "es": "Montado"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          }
+        },
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Event (missing, mounted)",
+            "fr": "Événement (missing, mounted)",
+            "de": "Ereignis (missing, mounted)",
+            "es": "Evento (missing, mounted)"
+          }
+        },
+        {
+          "key": "mountpoint",
+          "type": "string",
+          "label": {
+            "en": "Mount point",
+            "fr": "Point de montage",
+            "de": "Einhängepunkt",
+            "es": "Punto de montaje"
+          }
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "label": {
+            "en": "Type (ext4, btrfs…)",
+            "fr": "Type (ext4, btrfs…)",
+            "de": "Typ (ext4, btrfs…)",
+            "es": "Tipo (ext4, btrfs…)"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "service_state_changed",
+      "label": {
+        "en": "OpenMediaVault: service started or stopped",
+        "fr": "OpenMediaVault : service démarré ou arrêté",
+        "de": "OpenMediaVault: Dienst gestartet oder beendet",
+        "es": "OpenMediaVault: servicio iniciado o detenido"
+      },
+      "description": {
+        "en": "An enabled service of OpenMediaVault (SMB, NFS, SSH, rsync…) started or stopped.",
+        "fr": "Un service activé d’OpenMediaVault (SMB, NFS, SSH, rsync…) a démarré ou s’est arrêté.",
+        "de": "Ein aktivierter Dienst von OpenMediaVault (SMB, NFS, SSH, rsync…) wurde gestartet oder beendet.",
+        "es": "Un servicio activado de OpenMediaVault (SMB, NFS, SSH, rsync…) se inició o se detuvo."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          },
+          "description": {
+            "en": "A service device. Leave empty for any.",
+            "fr": "Un appareil service. Laissez vide pour tous.",
+            "de": "Ein Dienst-Gerät. Leer lassen für jeden.",
+            "es": "Un dispositivo servicio. Vacío para cualquiera."
+          },
+          "required": false
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Event",
+            "fr": "Événement",
+            "de": "Ereignis",
+            "es": "Evento"
+          },
+          "description": {
+            "en": "Leave empty for both.",
+            "fr": "Laissez vide pour les deux.",
+            "de": "Leer lassen für beide.",
+            "es": "Déjelo vacío para ambos."
+          },
+          "options": [
+            {
+              "value": "stopped",
+              "label": {
+                "en": "Stopped",
+                "fr": "Arrêté",
+                "de": "Beendet",
+                "es": "Detenido"
+              }
+            },
+            {
+              "value": "started",
+              "label": {
+                "en": "Started",
+                "fr": "Démarré",
+                "de": "Gestartet",
+                "es": "Iniciado"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "device",
+          "type": "string",
+          "label": {
+            "en": "Device",
+            "fr": "Appareil",
+            "de": "Gerät",
+            "es": "Dispositivo"
+          }
+        },
+        {
+          "key": "device_name",
+          "type": "string",
+          "label": {
+            "en": "Device name",
+            "fr": "Nom de l’appareil",
+            "de": "Gerätename",
+            "es": "Nombre del dispositivo"
+          }
+        },
+        {
+          "key": "service",
+          "type": "string",
+          "label": {
+            "en": "Service (smb, nfs…)",
+            "fr": "Service (smb, nfs…)",
+            "de": "Dienst (smb, nfs…)",
+            "es": "Servicio (smb, nfs…)"
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Service name",
+            "fr": "Nom du service",
+            "de": "Name des Dienstes",
+            "es": "Nombre del servicio"
+          }
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Event (started, stopped)",
+            "fr": "Événement (started, stopped)",
+            "de": "Ereignis (started, stopped)",
+            "es": "Evento (started, stopped)"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "get_status",
+      "label": {
+        "en": "OpenMediaVault: read the status",
+        "fr": "OpenMediaVault : lire l’état",
+        "de": "OpenMediaVault: Status lesen",
+        "es": "OpenMediaVault: leer el estado"
+      },
+      "description": {
+        "en": "CPU, memory, fullest file system, disks, services and updates, for a message or a condition.",
+        "fr": "CPU, mémoire, système de fichiers le plus plein, disques, services et mises à jour, pour un message ou une condition.",
+        "de": "CPU, Speicher, vollstes Dateisystem, Laufwerke, Dienste und Updates, für eine Nachricht oder Bedingung.",
+        "es": "CPU, memoria, sistema de archivos más lleno, discos, servicios y actualizaciones, para un mensaje o una condición."
+      },
+      "timeout_seconds": 30,
+      "outputs": [
+        {
+          "key": "cpu",
+          "type": "number",
+          "label": {
+            "en": "CPU (%)",
+            "fr": "CPU (%)",
+            "de": "CPU (%)",
+            "es": "CPU (%)"
+          }
+        },
+        {
+          "key": "memory",
+          "type": "number",
+          "label": {
+            "en": "Memory (%)",
+            "fr": "Mémoire (%)",
+            "de": "Speicher (%)",
+            "es": "Memoria (%)"
+          }
+        },
+        {
+          "key": "uptime_days",
+          "type": "number",
+          "label": {
+            "en": "Uptime (days)",
+            "fr": "Durée de marche (jours)",
+            "de": "Betriebszeit (Tage)",
+            "es": "Tiempo activo (días)"
+          }
+        },
+        {
+          "key": "updates",
+          "type": "number",
+          "label": {
+            "en": "Packages to upgrade",
+            "fr": "Paquets à mettre à jour",
+            "de": "Zu aktualisierende Pakete",
+            "es": "Paquetes por actualizar"
+          }
+        },
+        {
+          "key": "reboot_required",
+          "type": "number",
+          "label": {
+            "en": "Reboot required (1 or 0)",
+            "fr": "Redémarrage nécessaire (1 ou 0)",
+            "de": "Neustart erforderlich (1 oder 0)",
+            "es": "Reinicio necesario (1 o 0)"
+          }
+        },
+        {
+          "key": "storage_used_max",
+          "type": "number",
+          "label": {
+            "en": "Fullest file system (%)",
+            "fr": "Système de fichiers le plus plein (%)",
+            "de": "Vollstes Dateisystem (%)",
+            "es": "Sistema de archivos más lleno (%)"
+          }
+        },
+        {
+          "key": "disk_temperature_max",
+          "type": "number",
+          "label": {
+            "en": "Hottest disk (°C)",
+            "fr": "Disque le plus chaud (°C)",
+            "de": "Wärmstes Laufwerk (°C)",
+            "es": "Disco más caliente (°C)"
+          }
+        },
+        {
+          "key": "disks_failing",
+          "type": "number",
+          "label": {
+            "en": "Disks with S.M.A.R.T. problems",
+            "fr": "Disques avec problèmes S.M.A.R.T.",
+            "de": "Laufwerke mit S.M.A.R.T.-Problemen",
+            "es": "Discos con problemas S.M.A.R.T."
+          }
+        },
+        {
+          "key": "services_stopped",
+          "type": "number",
+          "label": {
+            "en": "Enabled services stopped",
+            "fr": "Services activés arrêtés",
+            "de": "Aktivierte Dienste beendet",
+            "es": "Servicios activados detenidos"
+          }
+        },
+        {
+          "key": "version",
+          "type": "string",
+          "label": {
+            "en": "Version",
+            "fr": "Version",
+            "de": "Version",
+            "es": "Versión"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "run_rsync_job",
+      "label": {
+        "en": "OpenMediaVault: run an rsync job",
+        "fr": "OpenMediaVault : lancer une tâche rsync",
+        "de": "OpenMediaVault: rsync-Auftrag starten",
+        "es": "OpenMediaVault: lanzar una tarea rsync"
+      },
+      "description": {
+        "en": "Runs a job of Services > Rsync > Jobs now, and waits up to 100 s for its end.",
+        "fr": "Lance tout de suite une tâche de Services > Rsync > Tâches, et attend jusqu’à 100 s sa fin.",
+        "de": "Startet sofort einen Auftrag aus Dienste > Rsync > Aufträge und wartet bis zu 100 s auf sein Ende.",
+        "es": "Lanza ahora una tarea de Servicios > Rsync > Tareas y espera hasta 100 s a que termine."
+      },
+      "timeout_seconds": 120,
+      "fields": [
+        {
+          "key": "job",
+          "type": "string",
+          "label": {
+            "en": "Job",
+            "fr": "Tâche",
+            "de": "Auftrag",
+            "es": "Tarea"
+          },
+          "description": {
+            "en": "Its comment in OpenMediaVault, or its UUID.",
+            "fr": "Son commentaire dans OpenMediaVault, ou son UUID.",
+            "de": "Sein Kommentar in OpenMediaVault oder seine UUID.",
+            "es": "Su comentario en OpenMediaVault, o su UUID."
+          },
+          "placeholder": {
+            "en": "Photos backup",
+            "fr": "Sauvegarde photos",
+            "de": "Fotosicherung",
+            "es": "Copia de fotos"
+          },
+          "required": true
+        },
+        {
+          "key": "wait",
+          "type": "boolean",
+          "label": {
+            "en": "Wait for the end",
+            "fr": "Attendre la fin",
+            "de": "Auf das Ende warten",
+            "es": "Esperar al final"
+          },
+          "description": {
+            "en": "Off: the scene goes on at once, the job runs on.",
+            "fr": "Désactivé : la scène continue tout de suite, la tâche continue.",
+            "de": "Aus: Die Szene läuft sofort weiter, der Auftrag auch.",
+            "es": "Desactivado: la escena sigue enseguida, la tarea continúa."
+          },
+          "default": true,
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "key": "job",
+          "type": "string",
+          "label": {
+            "en": "Job",
+            "fr": "Tâche",
+            "de": "Auftrag",
+            "es": "Tarea"
+          }
+        },
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "Status (completed, failed, running)",
+            "fr": "État (completed, failed, running)",
+            "de": "Status (completed, failed, running)",
+            "es": "Estado (completed, failed, running)"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Last lines of its output",
+            "fr": "Dernières lignes de sa sortie",
+            "de": "Letzte Zeilen der Ausgabe",
+            "es": "Últimas líneas de su salida"
+          }
+        }
+      ]
+    },
+    {
+      "key": "check_updates",
+      "label": {
+        "en": "OpenMediaVault: check for updates",
+        "fr": "OpenMediaVault : chercher les mises à jour",
+        "de": "OpenMediaVault: nach Updates suchen",
+        "es": "OpenMediaVault: buscar actualizaciones"
+      },
+      "description": {
+        "en": "Reads the package lists again (apt update) and gives the number of packages to upgrade. Installs nothing.",
+        "fr": "Relit les listes de paquets (apt update) et donne le nombre de paquets à mettre à jour. N’installe rien.",
+        "de": "Liest die Paketlisten neu (apt update) und gibt die Zahl der zu aktualisierenden Pakete. Installiert nichts.",
+        "es": "Vuelve a leer las listas de paquetes (apt update) y da el número de paquetes por actualizar. No instala nada."
+      },
+      "timeout_seconds": 120,
+      "outputs": [
+        {
+          "key": "updates",
+          "type": "number",
+          "label": {
+            "en": "Packages to upgrade",
+            "fr": "Paquets à mettre à jour",
+            "de": "Zu aktualisierende Pakete",
+            "es": "Paquetes por actualizar"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    },
+    {
+      "key": "reboot",
+      "label": {
+        "en": "OpenMediaVault: reboot the NAS",
+        "fr": "OpenMediaVault : redémarrer le NAS",
+        "de": "OpenMediaVault: NAS neu starten",
+        "es": "OpenMediaVault: reiniciar el NAS"
+      },
+      "description": {
+        "en": "The shares are unavailable for a few minutes.",
+        "fr": "Les partages sont indisponibles quelques minutes.",
+        "de": "Die Freigaben sind einige Minuten nicht verfügbar.",
+        "es": "Los recursos compartidos no están disponibles unos minutos."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "delay",
+          "type": "number",
+          "label": {
+            "en": "Delay (seconds)",
+            "fr": "Délai (secondes)",
+            "de": "Verzögerung (Sekunden)",
+            "es": "Retraso (segundos)"
+          },
+          "min": 0,
+          "max": 3600,
+          "default": 0,
+          "required": false
+        }
+      ]
+    },
+    {
+      "key": "shutdown",
+      "label": {
+        "en": "OpenMediaVault: shut down the NAS",
+        "fr": "OpenMediaVault : éteindre le NAS",
+        "de": "OpenMediaVault: NAS herunterfahren",
+        "es": "OpenMediaVault: apagar el NAS"
+      },
+      "description": {
+        "en": "Gladys cannot switch it on again: plan Wake-on-LAN, a smart plug or the power settings of the NAS.",
+        "fr": "Gladys ne peut pas le rallumer : prévoyez le Wake-on-LAN, une prise connectée ou les réglages d’alimentation du NAS.",
+        "de": "Gladys kann es nicht wieder einschalten: Planen Sie Wake-on-LAN, eine smarte Steckdose oder die Energieeinstellungen des NAS ein.",
+        "es": "Gladys no puede encenderlo de nuevo: prevea Wake-on-LAN, un enchufe inteligente o los ajustes de energía del NAS."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "delay",
+          "type": "number",
+          "label": {
+            "en": "Delay (seconds)",
+            "fr": "Délai (secondes)",
+            "de": "Verzögerung (Sekunden)",
+            "es": "Retraso (segundos)"
+          },
+          "min": 0,
+          "max": 3600,
+          "default": 0,
+          "required": false
+        }
+      ]
+    }
+  ]
+}

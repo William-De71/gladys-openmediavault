@@ -1,0 +1,13 @@
+Gladys OpenMediaVault integration
+Copyright 2026 William Deren
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+The RPC calls and the shape of their answers were taken from the source of
+openmediavault (https://github.com/openmediavault/openmediavault, GPL-3.0):
+facts about the protocol only, no code was copied. The choice of the data to
+read was inspired by homeassistant-openmediavault
+(https://github.com/tomaae/homeassistant-openmediavault, Apache-2.0).
+
+openmediavault is a project of Volker Theile. This community integration is
+not affiliated with, endorsed or sponsored by the openmediavault project.
