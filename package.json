@@ -1,6 +1,6 @@
 {
   "name": "gladys-openmediavault",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "External Gladys Assistant integration for OpenMediaVault NAS: system, disks and S.M.A.R.T. health, file systems, services, rsync jobs, scenes and dashboard widgets.",
   "homepage": "https://github.com/William-De71/gladys-openmediavault",
