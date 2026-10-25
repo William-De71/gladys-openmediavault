@@ -17,7 +17,7 @@ Alles bleibt in Ihrem Netzwerk: Die Integration spricht nur mit OpenMediaVault, 
 
 ## Voraussetzungen
 
-- Gladys Assistant 5.1.0 oder neuer.
+- Gladys Assistant 5.3.0 oder neuer.
 - OpenMediaVault 7 oder 8 (getestet mit 8.5), vom Gladys-Rechner aus erreichbar. OpenMediaVault 6 funktioniert, ohne den Standby der Laufwerke.
 - Ein **Administrator**-Konto von OpenMediaVault ohne Zwei-Faktor-Anmeldung: das Konto `admin`, oder besser ein eigener Benutzer für Gladys in der Gruppe **openmediavault-admin** (**Benutzer > Benutzer**, Benutzer anlegen, dann die Gruppe ankreuzen). OpenMediaVault hat keine Nur-Lese-Rolle: Jede Abfrage des NAS braucht die Administratorrolle.
 

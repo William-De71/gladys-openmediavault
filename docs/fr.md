@@ -17,7 +17,7 @@ Tout reste sur votre réseau : l’intégration ne parle qu’à OpenMediaVault,
 
 ## Prérequis
 
-- Gladys Assistant 5.1.0 ou plus récent.
+- Gladys Assistant 5.3.0 ou plus récent.
 - OpenMediaVault 7 ou 8 (testé sur la 8.5), joignable depuis la machine de Gladys. OpenMediaVault 6 fonctionne, sans la mise en veille des disques.
 - Un compte **administrateur** d’OpenMediaVault, sans double authentification : le compte `admin`, ou mieux un utilisateur dédié à Gladys, membre du groupe **openmediavault-admin** (**Utilisateurs > Utilisateurs**, créez l’utilisateur puis cochez le groupe). OpenMediaVault n’a pas de rôle en lecture seule : chaque lecture du NAS demande le rôle administrateur.
 

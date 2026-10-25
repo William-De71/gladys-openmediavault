@@ -5,7 +5,7 @@
 [![Lizenz: Apache-2.0](https://img.shields.io/badge/Lizenz-Apache--2.0-blue.svg)](LICENSE)
 [![Neueste Version](https://img.shields.io/github/v/release/William-De71/gladys-openmediavault?sort=semver)](https://github.com/William-De71/gladys-openmediavault/releases)
 [![CI](https://img.shields.io/github/actions/workflow/status/William-De71/gladys-openmediavault/release.yml?branch=main&label=CI)](https://github.com/William-De71/gladys-openmediavault/actions/workflows/release.yml)
-[![Gladys](https://img.shields.io/badge/Gladys-%E2%89%A5%205.1.0-2f6fb5)](https://gladysassistant.com)
+[![Gladys](https://img.shields.io/badge/Gladys-%E2%89%A5%205.3.0-2f6fb5)](https://gladysassistant.com)
 
 ![OpenMediaVault für Gladys Assistant](cover.jpg)
 
@@ -98,7 +98,7 @@ Ein von Gladys verlangter Neustart oder ein Herunterfahren löst weder „nicht 
 
 ## Voraussetzungen
 
-- Gladys Assistant **5.1.0** oder neuer (Widgets und Szenen): Ältere Instanzen können die Integration nicht installieren.
+- Gladys Assistant **5.3.0** oder neuer (Widgets und Szenen, Katalog-Suchbegriffe von Gladys 5.3): Ältere Instanzen können die Integration nicht installieren.
 - OpenMediaVault 7 oder 8 (OpenMediaVault 6 ohne Standby der Laufwerke) und ein Administratorkonto ohne Zwei-Faktor-Anmeldung (siehe [Dokumentation](docs/de.md#voraussetzungen)).
 
 ## Installation
