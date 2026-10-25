@@ -47,7 +47,7 @@ test('declares the local transport only: the web interface of OpenMediaVault, on
 
 test('requires the first Gladys accepting widgets and scenes; no extra permission', () => {
   assert.equal(manifest.gladys_version, '>=5.1.0');
-  assert.deepEqual(manifest.categories, ['network', 'services']);
+  assert.deepEqual(manifest.categories, ['servers']);
   for (const key of ['location', 'network_wake', 'containers', 'network_discovery', 'webhooks']) {
     assert.equal(manifest[key], undefined, key);
   }
